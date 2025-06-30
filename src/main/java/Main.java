@@ -5,16 +5,28 @@ public class Main {
 
 
        System.out.print("$ ");
+
        Scanner scanner = new Scanner(System.in);
 
        while(true){
+
            String input =scanner.nextLine();
-           if(input.substring(0,4).equals("echo")){
+
+           if(input.equals("exit 0")){
+
+            System.exit(0);
+
+           }else if(input.substring(0,4).equals("echo")){
+
              System.out.println(input.substring(5));
-             System.out.print("$ ");
+
+           }else{
+
+             System.out.println(input + ": command not found");
+             
            }
-          
-          
+
+           System.out.print("$ ");
            
        }
         
