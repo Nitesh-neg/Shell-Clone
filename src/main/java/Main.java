@@ -9,13 +9,11 @@ public class Main {
 
        while(true){
            String input =scanner.nextLine();
-           if(input.equals("exit 0")){
-
-            System.exit(0);
-
+           if(input.substring(0,4).equals("echo")){
+             System.out.println(input.substring(5));
+             System.out.print("$ ");
            }
-           System.out.println(input + ": command not found");
-           System.out.print("$ ");
+          
           
            
        }
