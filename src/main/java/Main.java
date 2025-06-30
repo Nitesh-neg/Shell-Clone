@@ -1,4 +1,5 @@
 import java.io.File;
+import java.io.InputStream;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -27,7 +28,16 @@ public class Main {
              System.out.println(type(input.substring(5)));
 
 
-           }else{
+           }else if((input != null && input.split("\\s+").length >= 2)){
+
+                String[] paths=input.split("\\s+");
+                String path =paths[0];
+                ProcessBuilder pb = new ProcessBuilder(paths);
+                Process process = pb.start();
+                InputStream inputStream = process.getInputStream();
+                inputStream.transferTo(System.out);
+
+          }else {
 
              System.out.println(input + ": command not found");
              
