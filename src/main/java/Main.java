@@ -20,6 +20,11 @@ public class Main {
 
              System.out.println(input.substring(5));
 
+           }else if(input.substring(0,4).equals("type")){
+
+             System.out.println(input.substring(5,9)+"is a shell builtin");
+
+
            }else{
 
              System.out.println(input + ": command not found");
