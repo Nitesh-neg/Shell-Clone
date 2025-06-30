@@ -22,7 +22,7 @@ public class Main {
 
            }else if(input.substring(0,4).equals("type")){
 
-             System.out.println(input.substring(5,9)+"is a shell builtin");
+             System.out.println(input.substring(5,9)+" is a shell builtin");
 
 
            }else{
