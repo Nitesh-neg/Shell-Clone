@@ -24,7 +24,7 @@ public class Main {
 
            }else if(input.substring(0,4).equals("type")){
 
-             System.out.println(type(input));
+             System.out.println(type(input.substring(5)));
 
 
            }else{
