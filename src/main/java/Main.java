@@ -53,7 +53,7 @@ public class Main {
        for (String path : paths) {
            File file = new File(path, command); // checking if command exist in path or not
            if (file.exists() && file.canExecute()) {
-                  System.out.println("Found command at: " + file.getAbsolutePath());
+                  System.out.println(command + " is " + file.getAbsolutePath());
                   break;
                }
            }
