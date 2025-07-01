@@ -19,6 +19,10 @@ public class Main {
 
             System.exit(0);
 
+           }else if(input.equals("pwd")){
+
+                System.out.println(new File("").getAbsolutePath());
+
            }else if(input.substring(0,4).equals("echo")){
 
              System.out.println(input.substring(5));
@@ -30,11 +34,11 @@ public class Main {
 
            }else if((input != null && input.split("\\s+").length >= 2)){
 
-                String[] paths=input.split("\\s+");
+                String[] paths=input.split("\\s+");// one or more whitespaces
                 String path =paths[0];
-                ProcessBuilder pb = new ProcessBuilder(paths);
-                Process process = pb.start();
-                InputStream inputStream = process.getInputStream();
+                ProcessBuilder pb = new ProcessBuilder(paths);// prepare the command
+                Process process = pb.start();// start the process
+                InputStream inputStream = process.getInputStream();// reads output from external process
                 inputStream.transferTo(System.out);
 
           }else {
@@ -71,4 +75,5 @@ public class Main {
 
 
     }
+
 }
