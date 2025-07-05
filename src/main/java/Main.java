@@ -1,4 +1,5 @@
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 import java.util.Scanner;
@@ -21,7 +22,7 @@ public class Main {
 
            }else if(input.equals("pwd")){
 
-                System.out.println(new File("").getAbsolutePath());
+                System.out.println(new File("").getAbsolutePath());// empty current directory
 
            }else if(input.substring(0,4).equals("echo")){
 
@@ -34,12 +35,28 @@ public class Main {
 
            }else if((input != null && input.split("\\s+").length >= 2)){
 
-                String[] paths=input.split("\\s+");// one or more whitespaces
-                String path =paths[0];
-                ProcessBuilder pb = new ProcessBuilder(paths);// prepare the command
-                Process process = pb.start();// start the process
-                InputStream inputStream = process.getInputStream();// reads output from external process
-                inputStream.transferTo(System.out);
+            try {
+                    String[] paths = input.split("\\s+"); // split by whitespace
+                    ProcessBuilder pb = new ProcessBuilder(paths);
+                    Process process = pb.start();
+
+                    // Get both stdout and stderr
+                    InputStream stdout = process.getInputStream();
+                    InputStream stderr = process.getErrorStream();
+
+                    // Wait for the command to complete
+                    int exitCode = process.waitFor();
+
+                    if (exitCode == 0) {
+                        stdout.transferTo(System.out);
+                    } else {
+                        System.err.println("Error running command:");
+                        stderr.transferTo(System.err);
+                    }
+
+                } catch (IOException | InterruptedException e) {
+                    System.err.println("Exception: " + e.getMessage());
+                }
 
           }else {
 
