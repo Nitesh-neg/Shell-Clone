@@ -16,24 +16,29 @@ public class Main {
 
            String input =scanner.nextLine();
 
+           // exit the program immediately and give the status code as 0
+
            if(input.equals("exit 0")){
 
             System.exit(0);
 
-           }else if(input.equals("pwd")){
-
-                System.out.println(new File("").getAbsolutePath());// empty current directory
-
-           }else if(input.substring(0,4).equals("echo")){
+            }else if(input.length() >= 4 && input.substring(0,4).equals("echo")){
 
              System.out.println(input.substring(5));
 
-           }else if(input.substring(0,4).equals("type")){
+           }else if(input.length() >= 4 && input.substring(0,4).equals("type")){
 
              System.out.println(type(input.substring(5)));
 
 
-           }else if((input != null && input.split("\\s+").length >= 2)){
+           }else if(input.equals("pwd")){
+
+               //File f = new File("nitsh");  means f is the reference to nitsh that is in nitsh. it does not check if nitsh exist or not.
+
+                System.out.println(new File("").getAbsolutePath());
+           
+           
+            } else if((input != null && input.split("\\s+").length >= 2)){
 
             try {
                     String[] paths = input.split("\\s+"); // split by whitespace
@@ -71,18 +76,28 @@ public class Main {
     }
 
     public static String type(String command){
-        String[] commands = {"exit", "echo", "type"};
-        String path_commands = System.getenv("PATH");// taking PATH from operating system
+        String[] commands = {"exit", "echo", "type","pwd"};
+
+        // Path is the environment 
+        //colon-separated list of directories.
+        String path_commands = System.getenv("PATH");
         String[] paths = path_commands.split(":");// different directories
 
         for(int i=0;i<commands.length;i++){
+            // using objects.equals , so that it can handle null
+            // if one of them is null 
+            // use .equals() --> only on those that you are sure they are not null , else it will give nullPointerException.
             if(Objects.equals(commands[i], command)){
                 return command + " is a shell builtin";
             }
         }
 
        for (String path : paths) {
-           File file = new File(path, command); // checking if command exist in path or not
+           
+          // creates a Java File object that represents a file or directory located at: path + "/" + command
+          // just represents the location of the file --> does not execute and also does not if it exist or not.
+
+           File file = new File(path, command); 
            if (file.exists() && file.canExecute()) {
                  return command + " is " + file.getAbsolutePath();
                }
