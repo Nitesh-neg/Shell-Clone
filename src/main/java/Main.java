@@ -5,8 +5,9 @@ import java.util.Objects;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) throws Exception {
 
+    static File currentDirectory = new File(System.getProperty("user.dir"));
+    public static void main(String[] args) throws Exception {
 
        System.out.print("$ ");
 
@@ -20,9 +21,9 @@ public class Main {
 
            if(input.equals("exit 0")){
 
-            System.exit(0);
+              System.exit(0);
 
-            }else if(input.length() >= 4 && input.substring(0,4).equals("echo")){
+           }else if(input.length() >= 4 && input.substring(0,4).equals("echo")){
 
              System.out.println(input.substring(5));
 
@@ -35,35 +36,51 @@ public class Main {
 
                //File f = new File("nitsh");  means f is the reference to nitsh that is in nitsh. it does not check if nitsh exist or not.
 
-                System.out.println(new File("").getAbsolutePath());
+                System.out.println(currentDirectory.getAbsolutePath());
            
            
-            } else if((input != null && input.split("\\s+").length >= 2)){
-
-            try {
-                    String[] paths = input.split("\\s+"); // split by whitespace
-                    ProcessBuilder pb = new ProcessBuilder(paths);
-                    Process process = pb.start();
-
-                    // Get both stdout and stderr
-                    InputStream stdout = process.getInputStream();
-                    InputStream stderr = process.getErrorStream();
-
-                    // Wait for the command to complete
-                    int exitCode = process.waitFor();
-
-                    if (exitCode == 0) {
-                        stdout.transferTo(System.out);
+            }else if (input.startsWith("cd")) {
+                String[] parts = input.trim().split("\s+");
+                if (parts.length >= 2) {
+                    File newDir = new File(parts[1]);
+                    if (newDir.isAbsolute() && newDir.exists() && newDir.isDirectory()) {
+                        currentDirectory = newDir;
+                        
                     } else {
-                        System.err.println("Error running command:");
-                        stderr.transferTo(System.err);
+                        System.out.println("cd: " + parts[1] + ": No such file or directory");
                     }
+                } else {
+                    System.out.println("cd: missing operand");
+
+                }
+            }
+
+            else if((input != null && input.split("\\s+").length >= 2)){
+
+                try {
+                        String[] paths = input.split("\\s+"); // split by whitespace
+                        ProcessBuilder pb = new ProcessBuilder(paths);
+                        Process process = pb.start();
+
+                        // Get both stdout and stderr
+                        InputStream stdout = process.getInputStream();
+                        InputStream stderr = process.getErrorStream();
+
+                        // Wait for the command to complete
+                        int exitCode = process.waitFor();
+
+                        if (exitCode == 0) {
+                            stdout.transferTo(System.out);
+                        } else {
+                            System.err.println("Error running command:");
+                            stderr.transferTo(System.err);
+                        }
 
                 } catch (IOException | InterruptedException e) {
-                    System.err.println("Exception: " + e.getMessage());
-                }
+                        System.err.println("Exception: " + e.getMessage());
+                    }
 
-          }else {
+          } else {
 
              System.out.println(input + ": command not found");
              
