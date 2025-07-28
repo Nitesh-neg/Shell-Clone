@@ -40,11 +40,19 @@ public class Main {
            
            
             }else if (input.startsWith("cd")) {
-                
+
                     String[] parts = input.trim().split("\\s+");
                     if (parts.length >= 2) {
                         String dir = parts[1];
+                        String homeDir = System.getenv("HOME");
                         File newDir;
+
+                        // Expand ~ to home directory
+                        if (dir.equals("~")) {
+                            dir = homeDir;
+                        } else if (dir.startsWith("~/")) {
+                            dir = homeDir + dir.substring(1);
+                        }
 
                         // Check if absolute or relative
                         if (new File(dir).isAbsolute()) {
@@ -53,9 +61,10 @@ public class Main {
                             newDir = new File(currentDirectory, dir);
                         }
 
-                        // Normalize the path (e.g., resolve "..", ".", etc.)
+                        // Normalize the path (e.g., resolve "..", ".", etc.) 
+                        // we use CanonicalFile to do that
                         try {
-                            newDir = newDir.getCanonicalFile();  // resolves symbolic links, dots, etc.
+                            newDir = newDir.getCanonicalFile();  
                         } catch (IOException e) {
                             System.out.println("cd: error resolving path");
                             return;
