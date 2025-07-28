@@ -40,22 +40,37 @@ public class Main {
            
            
             }else if (input.startsWith("cd")) {
-                String[] parts = input.trim().split("\s+");
-                if (parts.length >= 2) {
-                    File newDir = new File(parts[1]);
-                    if (newDir.isAbsolute() && newDir.exists() && newDir.isDirectory()) {
-                        currentDirectory = newDir;
-                        
+                
+                    String[] parts = input.trim().split("\\s+");
+                    if (parts.length >= 2) {
+                        String dir = parts[1];
+                        File newDir;
+
+                        // Check if absolute or relative
+                        if (new File(dir).isAbsolute()) {
+                            newDir = new File(dir);
+                        } else {
+                            newDir = new File(currentDirectory, dir);
+                        }
+
+                        // Normalize the path (e.g., resolve "..", ".", etc.)
+                        try {
+                            newDir = newDir.getCanonicalFile();  // resolves symbolic links, dots, etc.
+                        } catch (IOException e) {
+                            System.out.println("cd: error resolving path");
+                            return;
+                        }
+
+                        if (newDir.exists() && newDir.isDirectory()) {
+                            currentDirectory = newDir;
+                        } else {
+                            System.out.println("cd: " + dir + ": No such file or directory");
+                        }
                     } else {
-                        System.out.println("cd: " + parts[1] + ": No such file or directory");
+                        System.out.println("cd: missing operand");
                     }
-                } else {
-                    System.out.println("cd: missing operand");
 
-                }
-            }
-
-            else if((input != null && input.split("\\s+").length >= 2)){
+                } else if((input != null && input.split("\\s+").length >= 2)){
 
                 try {
                         String[] paths = input.split("\\s+"); // split by whitespace
